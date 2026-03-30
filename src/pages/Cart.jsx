@@ -50,7 +50,7 @@ function Cart() {
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain p-2 mix-blend-multiply"
                   />
                 </div>
                 <div className="grow">
@@ -58,7 +58,7 @@ function Cart() {
                     {item.title}
                   </h2>
                   <p className="text-blue-600 font-extrabold mt-1">
-                    ₹{item.price.toLocaleString("en-IN")}
+                    ${item.price.toFixed(2)}
                   </p>
                 </div>
               </div>
@@ -108,7 +108,7 @@ function Cart() {
             <div className="space-y-4 text-slate-600 font-medium">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span className="text-slate-800">₹{totalPrice.toLocaleString("en-IN")}</span>
+                <span className="text-slate-800">${totalPrice.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping</span>
@@ -116,14 +116,14 @@ function Cart() {
               </div>
               <div className="flex justify-between">
                 <span>Tax</span>
-                <span className="text-slate-800">₹0</span>
+                <span className="text-slate-800">$0.00</span>
               </div>
             </div>
             
             <div className="border-t border-slate-200 mt-6 pt-6 mb-8">
               <div className="flex justify-between items-center text-xl font-extrabold text-slate-900">
                 <span>Total</span>
-                <span>₹{totalPrice.toLocaleString("en-IN")}</span>
+                <span>${totalPrice.toFixed(2)}</span>
               </div>
             </div>
 

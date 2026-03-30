@@ -1,14 +1,34 @@
 import Navbar from "./components/Navbar";
 import ProductCard from "./components/ProductCard";
-import products from "./data/products";
 import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import ProductDetails from "./pages/ProductDetails";
 import { Routes, Route, useSearchParams } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function App() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("https://fakestoreapi.com/products");
+        if (!response.ok) throw new Error("Failed to fetch products");
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const filteredProducts = products.filter(product => 
     product.title.toLowerCase().includes(query.toLowerCase())
@@ -64,26 +84,38 @@ function App() {
                 </div>
 
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">
+                  <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 border-b-4 border-blue-600 pb-2 inline-block rounded-sm">
                     Latest Arrivals ✨
                   </h2>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-8">
-                  {filteredProducts.length > 0 ? (
-                    filteredProducts.map((product) => (
-                      <ProductCard key={product.id} product={product} />
-                    ))
-                  ) : (
-                    <div className="col-span-full py-20 animate-in fade-in zoom-in duration-500">
-                      <div className="flex flex-col items-center justify-center space-y-4">
-                        <div className="text-6xl text-slate-300 drop-shadow-sm">🔍</div>
-                        <h3 className="text-2xl font-bold text-slate-800 tracking-tight">No products found</h3>
-                        <p className="text-slate-500 font-medium text-lg">We couldn't find anything matching "<span className="text-indigo-600">{(query.length > 20 ? query.substring(0, 20) + '...' : query)}</span>".</p>
+                {loading ? (
+                  <div className="flex justify-center flex-col items-center py-20 animate-in fade-in duration-500">
+                    <div className="animate-spin rounded-full h-12 w-12 border-[3px] border-slate-200 border-t-blue-600 mb-4"></div>
+                    <p className="text-slate-500 font-medium tracking-wide">Loading awesome products...</p>
+                  </div>
+                ) : error ? (
+                  <div className="col-span-full py-16 bg-red-50/80 backdrop-blur-sm border border-red-100 rounded-3xl text-center">
+                    <p className="text-red-500 font-bold text-lg mb-2">Oops!</p>
+                    <p className="text-red-600">{error}</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-8">
+                    {filteredProducts.length > 0 ? (
+                      filteredProducts.map((product) => (
+                        <ProductCard key={product.id} product={product} />
+                      ))
+                    ) : (
+                      <div className="col-span-full py-20 animate-in fade-in zoom-in duration-500">
+                        <div className="flex flex-col items-center justify-center space-y-4">
+                          <div className="text-6xl text-slate-300 drop-shadow-sm">🔍</div>
+                          <h3 className="text-2xl font-bold text-slate-800 tracking-tight">No products found</h3>
+                          <p className="text-slate-500 font-medium text-lg">We couldn't find anything matching "<span className="text-indigo-600">{(query.length > 20 ? query.substring(0, 20) + '...' : query)}</span>".</p>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+                )}
               </div>
             }
           />

@@ -19,14 +19,14 @@ function ProductCard({ product }) {
   return (
     <div className="group bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col h-full hover:-translate-y-1">
       {/* Image Container linked to Details Page */}
-      <Link to={`/product/${product.id}`} className="relative aspect-square overflow-hidden bg-slate-50 block focus:outline-none">
+      <Link to={`/product/${product.id}`} className="relative aspect-square overflow-hidden bg-white p-6 block focus:outline-none">
         <img
           src={product.image}
           alt={product.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700 ease-out mix-blend-multiply"
         />
         {/* Subtle overlay */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 pointer-events-none" />
       </Link>
 
       {/* Content */}
@@ -36,7 +36,7 @@ function ProductCard({ product }) {
             {product.title}
           </h2>
           <p className="text-xl font-extrabold text-blue-600 mt-2">
-            ₹{product.price.toLocaleString("en-IN")}
+            ${product.price?.toFixed(2)}
           </p>
         </Link>
 
