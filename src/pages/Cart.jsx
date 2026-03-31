@@ -7,6 +7,7 @@ function Cart() {
   const { cartItems, removeFromCart, increaseQty, decreaseQty } = useContext(CartContext);
 
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   if (cartItems.length === 0) {
     return (
@@ -48,7 +49,7 @@ function Cart() {
               <div className="flex items-center gap-5 w-full sm:w-auto grow">
                 <div className="w-24 h-24 sm:w-20 sm:h-20 shrink-0 bg-slate-50 rounded-xl overflow-hidden border border-slate-100">
                   <img
-                    src={item.image}
+                    src={item.thumbnail}
                     alt={item.title}
                     className="w-full h-full object-contain p-2 mix-blend-multiply"
                   />
@@ -61,6 +62,19 @@ function Cart() {
                     ${item.price.toFixed(2)}
                   </p>
                 </div>
+              </div>
+
+              {/* Price & Subtotal */}
+              <div className="col-span-12 sm:col-span-3 text-right flex flex-row sm:flex-col justify-between sm:justify-center items-center sm:items-end">
+                <span className="text-slate-500 sm:hidden">Total:</span>
+                <span className="font-extrabold text-lg sm:text-lg text-blue-600">
+                  ${(item.price * item.quantity).toFixed(2)}
+                </span>
+                {item.quantity > 1 && (
+                  <span className="text-xs font-medium text-slate-400 hidden sm:block mt-1">
+                    ${item.price.toFixed(2)} each
+                  </span>
+                )}
               </div>
 
               {/* Controls */}
@@ -107,8 +121,8 @@ function Cart() {
             
             <div className="space-y-4 text-slate-600 font-medium">
               <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span className="text-slate-800">${totalPrice.toFixed(2)}</span>
+                <span>Subtotal ({totalItems} items)</span>
+                <span>${totalPrice.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping</span>
